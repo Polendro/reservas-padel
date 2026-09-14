@@ -6,10 +6,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 // Solo mapeo a tabla; la lógica de negocio va en domain.model.Pista.
+// El constructor sin argumentos es protected porque solo lo necesita Hibernate,
+// no debería usarse desde el resto del código.
 @Entity
 @Table(name = "pistas")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class PistaJpaEntity {
 
     @Id
@@ -21,26 +30,4 @@ public class PistaJpaEntity {
 
     @Column(nullable = false)
     private boolean activa;
-
-    protected PistaJpaEntity() {
-        // constructor vacío requerido por JPA/Hibernate
-    }
-
-    public PistaJpaEntity(Long id, String nombre, boolean activa) {
-        this.id = id;
-        this.nombre = nombre;
-        this.activa = activa;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public boolean isActiva() {
-        return activa;
-    }
 }
