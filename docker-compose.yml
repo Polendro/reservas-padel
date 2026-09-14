@@ -1,0 +1,15 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: padel_booking
+      MYSQL_USER: padel
+      MYSQL_PASSWORD: padel
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - padel_mysql_data:/var/lib/mysql
+
+volumes:
+  padel_mysql_data:
