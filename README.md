@@ -43,6 +43,7 @@ La API queda disponible en `http://localhost:8080`.
 | `POST` | `/api/auth/login` | pública | Devuelve un JWT si las credenciales son correctas |
 | `GET` | `/api/pistas/{id}/disponibilidad?fecha=YYYY-MM-DD` | pública | Franjas libres de una pista ese día |
 | `POST` | `/api/reservas` | requiere token | Crea una reserva |
+| `GET` | `/api/reservas/mias` | requiere token | Lista tus propias reservas |
 | `PATCH` | `/api/reservas/{id}/cancelar` | requiere token | Cancela una reserva propia (403 si no es tuya) |
 
 ## Tests

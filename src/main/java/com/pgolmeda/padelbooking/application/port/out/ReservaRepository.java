@@ -20,4 +20,6 @@ public interface ReservaRepository {
     Optional<Reserva> buscarPorId(Long id);
 
     List<Reserva> buscarConfirmadasPorPistaYFecha(Long pistaId, LocalDate fecha);
+
+    List<Reserva> buscarPorUsuarioId(Long usuarioId);
 }

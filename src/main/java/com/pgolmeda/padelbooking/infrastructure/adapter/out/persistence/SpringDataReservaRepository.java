@@ -27,4 +27,6 @@ public interface SpringDataReservaRepository extends JpaRepository<ReservaJpaEnt
     // no hace falta @Query cuando es así de directo.
     List<ReservaJpaEntity> findByPistaIdAndEstadoAndInicioBetween(
             Long pistaId, EstadoReserva estado, LocalDateTime desde, LocalDateTime hasta);
+
+    List<ReservaJpaEntity> findByUsuarioIdOrderByInicioDesc(Long usuarioId);
 }

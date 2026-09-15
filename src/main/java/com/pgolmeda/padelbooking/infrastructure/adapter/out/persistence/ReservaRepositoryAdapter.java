@@ -48,4 +48,12 @@ public class ReservaRepositoryAdapter implements ReservaRepository {
                 .map(ReservaMapper::aDominio)
                 .toList();
     }
+
+    @Override
+    public List<Reserva> buscarPorUsuarioId(Long usuarioId) {
+        return springDataReservaRepository.findByUsuarioIdOrderByInicioDesc(usuarioId)
+                .stream()
+                .map(ReservaMapper::aDominio)
+                .toList();
+    }
 }
