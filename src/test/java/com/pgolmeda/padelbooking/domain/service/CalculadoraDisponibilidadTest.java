@@ -29,7 +29,7 @@ class CalculadoraDisponibilidadTest {
     @Test
     void una_reserva_bloquea_exactamente_su_franja() {
         LocalDateTime inicio = LocalDateTime.of(FECHA, java.time.LocalTime.of(10, 0));
-        Reserva reserva = new Reserva(1L, 1L, "Pablo", inicio, inicio.plusHours(1), EstadoReserva.CONFIRMADA);
+        Reserva reserva = new Reserva(1L, 1L, 7L, inicio, inicio.plusHours(1), EstadoReserva.CONFIRMADA);
 
         List<FranjaHoraria> libres = CalculadoraDisponibilidad.calcular(FECHA, List.of(reserva));
 
@@ -42,7 +42,7 @@ class CalculadoraDisponibilidadTest {
         // El repositorio ya filtra por CONFIRMADA antes de llegar aquí, pero la calculadora
         // no se fía y filtra también — este test prueba justo esa defensa.
         LocalDateTime inicio = LocalDateTime.of(FECHA, java.time.LocalTime.of(10, 0));
-        Reserva reserva = new Reserva(1L, 1L, "Pablo", inicio, inicio.plusHours(1), EstadoReserva.CANCELADA);
+        Reserva reserva = new Reserva(1L, 1L, 7L, inicio, inicio.plusHours(1), EstadoReserva.CANCELADA);
 
         List<FranjaHoraria> libres = CalculadoraDisponibilidad.calcular(FECHA, List.of(reserva));
 

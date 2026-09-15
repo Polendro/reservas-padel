@@ -3,10 +3,12 @@ package com.pgolmeda.padelbooking.application.service;
 import com.pgolmeda.padelbooking.application.port.in.CrearReservaUseCase.CrearReservaCommand;
 import com.pgolmeda.padelbooking.application.port.out.PistaRepository;
 import com.pgolmeda.padelbooking.application.port.out.ReservaRepository;
+import com.pgolmeda.padelbooking.application.port.out.UsuarioRepository;
 import com.pgolmeda.padelbooking.domain.exception.PistaNoEncontradaException;
 import com.pgolmeda.padelbooking.domain.exception.ReservaSolapadaException;
 import com.pgolmeda.padelbooking.domain.model.Pista;
 import com.pgolmeda.padelbooking.domain.model.Reserva;
+import com.pgolmeda.padelbooking.domain.model.Usuario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,15 +27,21 @@ import static org.mockito.Mockito.when;
 // Test unitario puro: los puertos van mockeados, no hace falta levantar Spring ni BD.
 class CrearReservaServiceTest {
 
+    private static final Usuario USUARIO = new Usuario(7L, "pablo@test.com", "hash-cualquiera");
+
     private ReservaRepository reservaRepository;
     private PistaRepository pistaRepository;
+    private UsuarioRepository usuarioRepository;
     private CrearReservaService service;
 
     @BeforeEach
     void setUp() {
         reservaRepository = mock(ReservaRepository.class);
         pistaRepository = mock(PistaRepository.class);
-        service = new CrearReservaService(reservaRepository, pistaRepository);
+        usuarioRepository = mock(UsuarioRepository.class);
+        service = new CrearReservaService(reservaRepository, pistaRepository, usuarioRepository);
+
+        when(usuarioRepository.buscarPorEmail("pablo@test.com")).thenReturn(Optional.of(USUARIO));
     }
 
     @Test
@@ -45,10 +53,10 @@ class CrearReservaServiceTest {
         when(reservaRepository.existeSolapamiento(pistaId, inicio, fin)).thenReturn(false);
         when(reservaRepository.guardar(any(Reserva.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Reserva reserva = service.crear(new CrearReservaCommand(pistaId, "Pablo", inicio, fin));
+        Reserva reserva = service.crear(new CrearReservaCommand(pistaId, "pablo@test.com", inicio, fin));
 
         assertEquals(pistaId, reserva.getPistaId());
-        assertEquals("Pablo", reserva.getClienteNombre());
+        assertEquals(USUARIO.getId(), reserva.getUsuarioId());
         verify(reservaRepository).guardar(any(Reserva.class));
     }
 
@@ -58,7 +66,7 @@ class CrearReservaServiceTest {
         LocalDateTime inicio = LocalDateTime.now().plusDays(1);
 
         assertThrows(PistaNoEncontradaException.class, () ->
-                service.crear(new CrearReservaCommand(1L, "Pablo", inicio, inicio.plusHours(1))));
+                service.crear(new CrearReservaCommand(1L, "pablo@test.com", inicio, inicio.plusHours(1))));
 
         verifyNoInteractions(reservaRepository);
     }
@@ -72,7 +80,7 @@ class CrearReservaServiceTest {
         when(reservaRepository.existeSolapamiento(pistaId, inicio, fin)).thenReturn(true);
 
         assertThrows(ReservaSolapadaException.class, () ->
-                service.crear(new CrearReservaCommand(pistaId, "Pablo", inicio, fin)));
+                service.crear(new CrearReservaCommand(pistaId, "pablo@test.com", inicio, fin)));
 
         verify(reservaRepository, never()).guardar(any());
     }

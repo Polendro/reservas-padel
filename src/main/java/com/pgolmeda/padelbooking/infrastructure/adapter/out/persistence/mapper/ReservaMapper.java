@@ -13,7 +13,7 @@ public final class ReservaMapper {
         return new ReservaJpaEntity(
                 reserva.getId(),
                 reserva.getPistaId(),
-                reserva.getClienteNombre(),
+                reserva.getUsuarioId(),
                 reserva.getInicio(),
                 reserva.getFin(),
                 reserva.getEstado());
@@ -23,7 +23,7 @@ public final class ReservaMapper {
         return new Reserva(
                 entidad.getId(),
                 entidad.getPistaId(),
-                entidad.getClienteNombre(),
+                entidad.getUsuarioId(),
                 entidad.getInicio(),
                 entidad.getFin(),
                 entidad.getEstado());

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public record ReservaResponse(
         Long id,
         Long pistaId,
-        String clienteNombre,
+        Long usuarioId,
         LocalDateTime inicio,
         LocalDateTime fin,
         EstadoReserva estado) {
@@ -17,7 +17,7 @@ public record ReservaResponse(
         return new ReservaResponse(
                 reserva.getId(),
                 reserva.getPistaId(),
-                reserva.getClienteNombre(),
+                reserva.getUsuarioId(),
                 reserva.getInicio(),
                 reserva.getFin(),
                 reserva.getEstado());

@@ -30,7 +30,7 @@ class CancelarReservaServiceTest {
     @Test
     void cancela_la_reserva_si_existe_y_puede_cancelarse() {
         LocalDateTime inicio = LocalDateTime.now().plusDays(1);
-        Reserva reserva = new Reserva(1L, 1L, "Pablo", inicio, inicio.plusHours(1), EstadoReserva.CONFIRMADA);
+        Reserva reserva = new Reserva(1L, 1L, 7L, inicio, inicio.plusHours(1), EstadoReserva.CONFIRMADA);
         when(reservaRepository.buscarPorId(1L)).thenReturn(Optional.of(reserva));
         when(reservaRepository.guardar(any(Reserva.class))).thenAnswer(invocation -> invocation.getArgument(0));
 

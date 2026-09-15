@@ -9,6 +9,7 @@ import com.pgolmeda.padelbooking.infrastructure.adapter.in.web.dto.ReservaRespon
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,9 +30,12 @@ public class ReservaController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservaResponse> crear(@Valid @RequestBody CrearReservaRequest request) {
+    public ResponseEntity<ReservaResponse> crear(@Valid @RequestBody CrearReservaRequest request,
+                                                  Authentication authentication) {
+        // authentication.getName() es el email: lo dejó ahí JwtAuthenticationFilter al
+        // validar el token, mucho antes de que la petición llegue aquí.
         Reserva reserva = crearReservaUseCase.crear(new CrearReservaCommand(
-                request.pistaId(), request.clienteNombre(), request.inicio(), request.fin()));
+                request.pistaId(), authentication.getName(), request.inicio(), request.fin()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ReservaResponse.desde(reserva));
     }

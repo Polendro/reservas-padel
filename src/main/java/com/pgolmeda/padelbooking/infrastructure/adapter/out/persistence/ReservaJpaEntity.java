@@ -31,8 +31,8 @@ public class ReservaJpaEntity {
     @Column(name = "pista_id", nullable = false)
     private Long pistaId;
 
-    @Column(name = "cliente_nombre", nullable = false)
-    private String clienteNombre;
+    @Column(name = "usuario_id", nullable = false)
+    private Long usuarioId;
 
     @Column(nullable = false)
     private LocalDateTime inicio;

@@ -14,27 +14,27 @@ public class Reserva {
 
     private final Long id;
     private final Long pistaId;
-    private final String clienteNombre;
+    private final Long usuarioId;
     private final LocalDateTime inicio;
     private final LocalDateTime fin;
     private final EstadoReserva estado;
 
-    public Reserva(Long id, Long pistaId, String clienteNombre, LocalDateTime inicio, LocalDateTime fin,
+    public Reserva(Long id, Long pistaId, Long usuarioId, LocalDateTime inicio, LocalDateTime fin,
                     EstadoReserva estado) {
         if (!inicio.isBefore(fin)) {
             throw new IllegalArgumentException("La hora de inicio debe ser anterior a la hora de fin");
         }
         this.id = id;
         this.pistaId = pistaId;
-        this.clienteNombre = Objects.requireNonNull(clienteNombre, "clienteNombre no puede ser nulo");
+        this.usuarioId = Objects.requireNonNull(usuarioId, "usuarioId no puede ser nulo");
         this.inicio = inicio;
         this.fin = fin;
         this.estado = estado;
     }
 
     /** Fábrica para una reserva nueva: sin id todavía (lo asigna la base de datos) y ya confirmada. */
-    public static Reserva nueva(Long pistaId, String clienteNombre, LocalDateTime inicio, LocalDateTime fin) {
-        return new Reserva(null, pistaId, clienteNombre, inicio, fin, EstadoReserva.CONFIRMADA);
+    public static Reserva nueva(Long pistaId, Long usuarioId, LocalDateTime inicio, LocalDateTime fin) {
+        return new Reserva(null, pistaId, usuarioId, inicio, fin, EstadoReserva.CONFIRMADA);
     }
 
     // Evita que dos reservas se crucen en la misma pista.
@@ -51,7 +51,7 @@ public class Reserva {
         if (Duration.between(ahora, inicio).toHours() < HORAS_MINIMAS_DE_ANTELACION) {
             throw new CancelacionFueraDePlazoException(id);
         }
-        return new Reserva(id, pistaId, clienteNombre, inicio, fin, EstadoReserva.CANCELADA);
+        return new Reserva(id, pistaId, usuarioId, inicio, fin, EstadoReserva.CANCELADA);
     }
 
     public Long getId() {
@@ -62,8 +62,8 @@ public class Reserva {
         return pistaId;
     }
 
-    public String getClienteNombre() {
-        return clienteNombre;
+    public Long getUsuarioId() {
+        return usuarioId;
     }
 
     public LocalDateTime getInicio() {

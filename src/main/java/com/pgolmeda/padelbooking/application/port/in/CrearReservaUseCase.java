@@ -12,6 +12,8 @@ public interface CrearReservaUseCase {
 
     Reserva crear(CrearReservaCommand command);
 
-    record CrearReservaCommand(Long pistaId, String clienteNombre, LocalDateTime inicio, LocalDateTime fin) {
+    // emailUsuario viene del token, no lo manda el cliente en el body: es el propio
+    // controller quien lo saca de la autenticación antes de construir el command.
+    record CrearReservaCommand(Long pistaId, String emailUsuario, LocalDateTime inicio, LocalDateTime fin) {
     }
 }
