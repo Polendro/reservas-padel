@@ -1,5 +1,7 @@
 # Padel Booking
 
+[![CI](https://github.com/Polendro/reservas-padel/actions/workflows/ci.yml/badge.svg)](https://github.com/Polendro/reservas-padel/actions/workflows/ci.yml)
+
 API REST para la gestión de reservas de pistas de pádel, construida con **arquitectura hexagonal (Ports & Adapters)**. Proyecto personal para practicar y demostrar cómo separo la lógica de negocio de la infraestructura (framework, base de datos, HTTP) en una aplicación real.
 
 El frontend (Angular) vive/vivirá en un repo aparte y consume esta API.
@@ -79,7 +81,7 @@ POST /api/reservas
 - [x] Caso de uso: cancelar reserva (con política de antelación)
 - [ ] Caso de uso: consultar disponibilidad de una pista
 - [ ] Test de integración del adaptador de persistencia con Testcontainers
-- [ ] CI con GitHub Actions
+- [x] CI con GitHub Actions
 - [ ] Frontend en Angular
 - [ ] Despliegue (backend + MySQL en la nube)
 
