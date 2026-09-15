@@ -1,0 +1,28 @@
+<div class="tarjeta">
+  <h2>Crear cuenta</h2>
+
+  <form [formGroup]="form" (ngSubmit)="enviar()">
+    <label>
+      Email
+      <input type="email" formControlName="email" />
+    </label>
+
+    <label>
+      Contraseña
+      <input type="password" formControlName="password" />
+      @if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+        <span class="error">Mínimo 8 caracteres</span>
+      }
+    </label>
+
+    @if (error) {
+      <p class="error">{{ error }}</p>
+    }
+
+    <button type="submit" [disabled]="form.invalid || cargando">
+      {{ cargando ? 'Creando cuenta...' : 'Crear cuenta' }}
+    </button>
+  </form>
+
+  <p>¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+</div>

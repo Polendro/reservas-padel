@@ -1,0 +1,25 @@
+<div class="tarjeta">
+  <h2>Iniciar sesión</h2>
+
+  <form [formGroup]="form" (ngSubmit)="enviar()">
+    <label>
+      Email
+      <input type="email" formControlName="email" />
+    </label>
+
+    <label>
+      Contraseña
+      <input type="password" formControlName="password" />
+    </label>
+
+    @if (error) {
+      <p class="error">{{ error }}</p>
+    }
+
+    <button type="submit" [disabled]="form.invalid || cargando">
+      {{ cargando ? 'Entrando...' : 'Entrar' }}
+    </button>
+  </form>
+
+  <p>¿No tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
+</div>

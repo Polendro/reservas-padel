@@ -1,0 +1,40 @@
+<div class="pagina">
+  <h2>Mis reservas</h2>
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  @if (cargando) {
+    <p>Cargando...</p>
+  } @else if (reservas.length === 0) {
+    <p>No tienes ninguna reserva todavía.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Pista</th>
+          <th>Cuándo</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (reserva of reservas; track reserva.id) {
+          <tr>
+            <td>Pista {{ reserva.pistaId }}</td>
+            <td>{{ horaDe(reserva.inicio) }}</td>
+            <td>{{ reserva.estado }}</td>
+            <td>
+              @if (reserva.estado === 'CONFIRMADA') {
+                <button class="secundario" (click)="cancelar(reserva)" [disabled]="cancelandoId === reserva.id">
+                  {{ cancelandoId === reserva.id ? 'Cancelando...' : 'Cancelar' }}
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

@@ -1,6 +1,6 @@
 # Padel Booking
 
-API REST para la gestión de reservas de pistas de pádel, hecha con Spring Boot siguiendo arquitectura hexagonal (separar la lógica de negocio del framework y la base de datos). El frontend en Angular va en otro repositorio aparte y consume esta API.
+Aplicación de reservas de pistas de pádel: backend en Spring Boot con arquitectura hexagonal (separar la lógica de negocio del framework y la base de datos) y frontend en Angular, en el mismo repo (carpeta `frontend/`).
 
 ## Arquitectura
 
@@ -18,22 +18,29 @@ infrastructure/
 
 ## Stack
 
-- Java 21 + Spring Boot
-- Spring Data JPA + MySQL
-- Spring Security + JWT
-- JUnit 5, Mockito, Testcontainers
-- Docker / Docker Compose
+**Backend:** Java 21 + Spring Boot, Spring Data JPA + MySQL, Spring Security + JWT, JUnit 5, Mockito, Testcontainers, Docker.
+**Frontend:** Angular 19, standalone components, sin NgModules.
 
 ## Cómo levantarlo en local
 
-Necesitas Docker (para MySQL) y JDK 21.
+Necesitas Docker (para MySQL), JDK 21 y Node.
 
 ```bash
+# Backend
 docker compose up -d
 ./mvnw spring-boot:run
 ```
 
 La API queda disponible en `http://localhost:8080`.
+
+```bash
+# Frontend, en otra terminal
+cd frontend
+npm install
+npm start
+```
+
+La app queda disponible en `http://localhost:4200`.
 
 ## Endpoints
 

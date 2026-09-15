@@ -1,0 +1,52 @@
+<div class="pagina">
+  <h2>Disponibilidad</h2>
+
+  <form (ngSubmit)="buscar()">
+    <label>
+      Pista
+      <select [(ngModel)]="pistaSeleccionada" name="pista" required>
+        <option [ngValue]="null">Selecciona una pista</option>
+        @for (pista of pistas; track pista.id) {
+          <option [ngValue]="pista.id">{{ pista.nombre }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Fecha
+      <input type="date" [(ngModel)]="fecha" name="fecha" required />
+    </label>
+
+    <button type="submit" [disabled]="!pistaSeleccionada || !fecha || cargandoFranjas">
+      {{ cargandoFranjas ? 'Buscando...' : 'Buscar' }}
+    </button>
+  </form>
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+  @if (mensaje) {
+    <p class="exito">{{ mensaje }}</p>
+  }
+
+  @if (franjas.length > 0) {
+    <table>
+      <thead>
+        <tr>
+          <th>Hora</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (franja of franjas; track franja.inicio) {
+          <tr>
+            <td>{{ horaDe(franja.inicio) }} - {{ horaDe(franja.fin) }}</td>
+            <td><button (click)="reservar(franja)" [disabled]="reservando">Reservar</button></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else if (buscado && !cargandoFranjas) {
+    <p>No quedan huecos libres ese día.</p>
+  }
+</div>
