@@ -42,6 +42,10 @@ public class Reserva {
         return inicio.isBefore(otroFin) && otroInicio.isBefore(fin);
     }
 
+    public boolean perteneceA(Long otroUsuarioId) {
+        return usuarioId.equals(otroUsuarioId);
+    }
+
     // "ahora" entra como parámetro (en vez de usar LocalDateTime.now() aquí dentro) para que
     // el test pueda fijar la hora y no dependa del reloj real.
     public Reserva cancelar(LocalDateTime ahora) {

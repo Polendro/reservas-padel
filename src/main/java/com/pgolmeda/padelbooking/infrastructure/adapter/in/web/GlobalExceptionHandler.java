@@ -3,6 +3,7 @@ package com.pgolmeda.padelbooking.infrastructure.adapter.in.web;
 import com.pgolmeda.padelbooking.domain.exception.CancelacionFueraDePlazoException;
 import com.pgolmeda.padelbooking.domain.exception.CredencialesInvalidasException;
 import com.pgolmeda.padelbooking.domain.exception.EmailYaRegistradoException;
+import com.pgolmeda.padelbooking.domain.exception.NoAutorizadoException;
 import com.pgolmeda.padelbooking.domain.exception.PistaNoEncontradaException;
 import com.pgolmeda.padelbooking.domain.exception.ReservaNoEncontradaException;
 import com.pgolmeda.padelbooking.domain.exception.ReservaSolapadaException;
@@ -50,6 +51,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CredencialesInvalidasException.class)
     public ResponseEntity<Map<String, Object>> credencialesInvalidas(CredencialesInvalidasException ex) {
         return error(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    @ExceptionHandler(NoAutorizadoException.class)
+    public ResponseEntity<Map<String, Object>> noAutorizado(NoAutorizadoException ex) {
+        return error(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

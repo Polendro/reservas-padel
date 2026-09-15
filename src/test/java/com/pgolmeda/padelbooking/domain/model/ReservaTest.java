@@ -62,4 +62,13 @@ class ReservaTest {
 
         assertThrows(CancelacionFueraDePlazoException.class, () -> reserva.cancelar(LocalDateTime.now()));
     }
+
+    @Test
+    void pertenece_al_usuario_que_la_creo() {
+        LocalDateTime inicio = LocalDateTime.now().plusDays(1);
+        Reserva reserva = new Reserva(1L, 1L, 7L, inicio, inicio.plusHours(1), EstadoReserva.CONFIRMADA);
+
+        assertTrue(reserva.perteneceA(7L));
+        assertFalse(reserva.perteneceA(999L));
+    }
 }
