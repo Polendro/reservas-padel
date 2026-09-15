@@ -1,7 +1,9 @@
 package com.pgolmeda.padelbooking.infrastructure.adapter.in.web;
 
 import com.pgolmeda.padelbooking.application.port.in.ConsultarDisponibilidadUseCase;
+import com.pgolmeda.padelbooking.application.port.in.ListarPistasUseCase;
 import com.pgolmeda.padelbooking.infrastructure.adapter.in.web.dto.FranjaDisponibleResponse;
+import com.pgolmeda.padelbooking.infrastructure.adapter.in.web.dto.PistaResponse;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,9 +19,19 @@ import java.util.List;
 public class PistaController {
 
     private final ConsultarDisponibilidadUseCase consultarDisponibilidadUseCase;
+    private final ListarPistasUseCase listarPistasUseCase;
 
-    public PistaController(ConsultarDisponibilidadUseCase consultarDisponibilidadUseCase) {
+    public PistaController(ConsultarDisponibilidadUseCase consultarDisponibilidadUseCase,
+                            ListarPistasUseCase listarPistasUseCase) {
         this.consultarDisponibilidadUseCase = consultarDisponibilidadUseCase;
+        this.listarPistasUseCase = listarPistasUseCase;
+    }
+
+    @GetMapping
+    public List<PistaResponse> listar() {
+        return listarPistasUseCase.listar().stream()
+                .map(PistaResponse::desde)
+                .toList();
     }
 
     // GET porque no cambia nada en el servidor: es idempotente y cacheable, a diferencia
