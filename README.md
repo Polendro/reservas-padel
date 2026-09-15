@@ -28,7 +28,7 @@ infrastructure/
 |---|---|
 | Backend | Java 21, Spring Boot |
 | Persistencia | Spring Data JPA + MySQL |
-| Seguridad | Spring Security (JWT en progreso) |
+| Seguridad | Spring Security + JWT (jjwt) |
 | Tests | JUnit 5, Mockito, Testcontainers |
 | Infra | Docker / Docker Compose |
 | Frontend | Angular (repo aparte) |
@@ -47,26 +47,41 @@ docker compose up -d
 
 La API queda disponible en `http://localhost:8080`.
 
+Para producción hay que fijar la variable de entorno `JWT_SECRET` (mínimo 32 bytes) — en local no hace falta, `application.yml` trae un valor de desarrollo por defecto.
+
 ## Endpoints
 
-| Método | Ruta | Descripción |
-|---|---|---|
-| `POST` | `/api/reservas` | Crea una reserva. Falla con `404` si la pista no existe y con `409` si el horario se solapa con otra reserva confirmada. |
-| `PATCH` | `/api/reservas/{id}/cancelar` | Cancela una reserva. Falla con `404` si no existe y con `409` si ya estaba cancelada o si quedan menos de 2h para el inicio. |
-| `GET` | `/api/pistas/{id}/disponibilidad?fecha=YYYY-MM-DD` | Devuelve las franjas libres de una pista ese día (horario 08:00-22:00, franjas de 1h). Falla con `404` si la pista no existe. |
-| `POST` | `/api/auth/registro` | Crea una cuenta (email + password). Falla con `409` si el email ya está registrado. |
-| `POST` | `/api/auth/login` | Devuelve un JWT si el email y password son correctos. Falla con `401` si no lo son (mismo error para ambos casos, a propósito). |
+| Método | Ruta | Auth | Descripción |
+|---|---|---|---|
+| `POST` | `/api/auth/registro` | pública | Crea una cuenta (email + password). Falla con `409` si el email ya está registrado. |
+| `POST` | `/api/auth/login` | pública | Devuelve un JWT si el email y password son correctos. Falla con `401` si no lo son (mismo error para ambos casos, a propósito). |
+| `GET` | `/api/pistas/{id}/disponibilidad?fecha=YYYY-MM-DD` | pública | Devuelve las franjas libres de una pista ese día (horario 08:00-22:00, franjas de 1h). Falla con `404` si la pista no existe. |
+| `POST` | `/api/reservas` | 🔒 requiere token | Crea una reserva. Falla con `404` si la pista no existe y con `409` si el horario se solapa con otra reserva confirmada. |
+| `PATCH` | `/api/reservas/{id}/cancelar` | 🔒 requiere token | Cancela una reserva. Falla con `404` si no existe y con `409` si ya estaba cancelada o si quedan menos de 2h para el inicio. |
 
-Ejemplo de petición:
+Flujo completo con `curl`:
 
-```json
-POST /api/reservas
-{
-  "pistaId": 1,
-  "clienteNombre": "Pablo García",
-  "inicio": "2026-10-01T18:00:00",
-  "fin": "2026-10-01T19:00:00"
-}
+```bash
+# 1. Registro
+curl -X POST http://localhost:8080/api/auth/registro \
+  -H "Content-Type: application/json" \
+  -d '{"email": "pablo@test.com", "password": "password123"}'
+
+# 2. Login -> devuelve { "token": "..." }
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "pablo@test.com", "password": "password123"}'
+
+# 3. Usar el token en los endpoints protegidos
+curl -X POST http://localhost:8080/api/reservas \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token del paso 2>" \
+  -d '{
+    "pistaId": 1,
+    "clienteNombre": "Pablo García",
+    "inicio": "2026-10-01T18:00:00",
+    "fin": "2026-10-01T19:00:00"
+  }'
 ```
 
 ## Tests
@@ -80,7 +95,7 @@ POST /api/reservas
 
 ## Roadmap
 
-- [ ] Autenticación JWT (login + filtro de seguridad)
+- [x] Autenticación JWT (login + filtro de seguridad)
 - [x] Caso de uso: cancelar reserva (con política de antelación)
 - [x] Caso de uso: consultar disponibilidad de una pista
 - [ ] Test de integración del adaptador de persistencia con Testcontainers
