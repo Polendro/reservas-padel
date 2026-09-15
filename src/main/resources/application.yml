@@ -12,3 +12,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+app:
+  jwt:
+    # En producción esto SIEMPRE tiene que venir de una variable de entorno (JWT_SECRET),
+    # nunca del valor por defecto de aquí abajo. El de abajo es solo para poder arrancar
+    # en local sin tener que configurar nada — no es un secreto real, está en el repo.
+    secret: ${JWT_SECRET:dev-only-secret-cambia-esto-en-produccion-minimo-32-bytes-1234}
+    expiracion-minutos: 60

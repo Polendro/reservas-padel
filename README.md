@@ -55,6 +55,7 @@ La API queda disponible en `http://localhost:8080`.
 | `PATCH` | `/api/reservas/{id}/cancelar` | Cancela una reserva. Falla con `404` si no existe y con `409` si ya estaba cancelada o si quedan menos de 2h para el inicio. |
 | `GET` | `/api/pistas/{id}/disponibilidad?fecha=YYYY-MM-DD` | Devuelve las franjas libres de una pista ese día (horario 08:00-22:00, franjas de 1h). Falla con `404` si la pista no existe. |
 | `POST` | `/api/auth/registro` | Crea una cuenta (email + password). Falla con `409` si el email ya está registrado. |
+| `POST` | `/api/auth/login` | Devuelve un JWT si el email y password son correctos. Falla con `401` si no lo son (mismo error para ambos casos, a propósito). |
 
 Ejemplo de petición:
 
