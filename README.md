@@ -54,6 +54,7 @@ La API queda disponible en `http://localhost:8080`.
 | `POST` | `/api/reservas` | Crea una reserva. Falla con `404` si la pista no existe y con `409` si el horario se solapa con otra reserva confirmada. |
 | `PATCH` | `/api/reservas/{id}/cancelar` | Cancela una reserva. Falla con `404` si no existe y con `409` si ya estaba cancelada o si quedan menos de 2h para el inicio. |
 | `GET` | `/api/pistas/{id}/disponibilidad?fecha=YYYY-MM-DD` | Devuelve las franjas libres de una pista ese día (horario 08:00-22:00, franjas de 1h). Falla con `404` si la pista no existe. |
+| `POST` | `/api/auth/registro` | Crea una cuenta (email + password). Falla con `409` si el email ya está registrado. |
 
 Ejemplo de petición:
 

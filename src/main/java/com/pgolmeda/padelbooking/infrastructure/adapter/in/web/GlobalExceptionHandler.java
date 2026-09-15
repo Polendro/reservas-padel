@@ -1,6 +1,7 @@
 package com.pgolmeda.padelbooking.infrastructure.adapter.in.web;
 
 import com.pgolmeda.padelbooking.domain.exception.CancelacionFueraDePlazoException;
+import com.pgolmeda.padelbooking.domain.exception.EmailYaRegistradoException;
 import com.pgolmeda.padelbooking.domain.exception.PistaNoEncontradaException;
 import com.pgolmeda.padelbooking.domain.exception.ReservaNoEncontradaException;
 import com.pgolmeda.padelbooking.domain.exception.ReservaSolapadaException;
@@ -37,6 +38,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({ReservaYaCanceladaException.class, CancelacionFueraDePlazoException.class})
     public ResponseEntity<Map<String, Object>> cancelacionInvalida(RuntimeException ex) {
+        return error(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(EmailYaRegistradoException.class)
+    public ResponseEntity<Map<String, Object>> emailYaRegistrado(EmailYaRegistradoException ex) {
         return error(HttpStatus.CONFLICT, ex.getMessage());
     }
 
