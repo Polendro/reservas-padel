@@ -12,6 +12,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    # Sin esto, Spring Boot intenta correr data.sql antes de que Hibernate haya
+    # creado las tablas (con MySQL, a diferencia de una BD embebida, no es automático).
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
 
 app:
   jwt:

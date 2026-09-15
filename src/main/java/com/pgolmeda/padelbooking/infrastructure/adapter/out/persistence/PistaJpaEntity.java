@@ -25,7 +25,9 @@ public class PistaJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    // unique porque data.sql usa INSERT IGNORE apoyándose en esto para no duplicar
+    // las pistas de partida cada vez que arranca la aplicación.
+    @Column(nullable = false, unique = true)
     private String nombre;
 
     @Column(nullable = false)
