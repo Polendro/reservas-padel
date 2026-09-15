@@ -50,6 +50,7 @@ La API queda disponible en `http://localhost:8080`.
 | Método | Ruta | Descripción |
 |---|---|---|
 | `POST` | `/api/reservas` | Crea una reserva. Falla con `404` si la pista no existe y con `409` si el horario se solapa con otra reserva confirmada. |
+| `PATCH` | `/api/reservas/{id}/cancelar` | Cancela una reserva. Falla con `404` si no existe y con `409` si ya estaba cancelada o si quedan menos de 2h para el inicio. |
 
 Ejemplo de petición:
 
@@ -75,7 +76,7 @@ POST /api/reservas
 ## Roadmap
 
 - [ ] Autenticación JWT (login + filtro de seguridad)
-- [ ] Caso de uso: cancelar reserva (con política de antelación)
+- [x] Caso de uso: cancelar reserva (con política de antelación)
 - [ ] Caso de uso: consultar disponibilidad de una pista
 - [ ] Test de integración del adaptador de persistencia con Testcontainers
 - [ ] CI con GitHub Actions

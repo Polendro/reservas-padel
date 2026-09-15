@@ -1,5 +1,6 @@
 package com.pgolmeda.padelbooking.infrastructure.adapter.in.web;
 
+import com.pgolmeda.padelbooking.application.port.in.CancelarReservaUseCase;
 import com.pgolmeda.padelbooking.application.port.in.CrearReservaUseCase;
 import com.pgolmeda.padelbooking.application.port.in.CrearReservaUseCase.CrearReservaCommand;
 import com.pgolmeda.padelbooking.domain.model.Reserva;
@@ -8,6 +9,8 @@ import com.pgolmeda.padelbooking.infrastructure.adapter.in.web.dto.ReservaRespon
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservaController {
 
     private final CrearReservaUseCase crearReservaUseCase;
+    private final CancelarReservaUseCase cancelarReservaUseCase;
 
-    public ReservaController(CrearReservaUseCase crearReservaUseCase) {
+    public ReservaController(CrearReservaUseCase crearReservaUseCase, CancelarReservaUseCase cancelarReservaUseCase) {
         this.crearReservaUseCase = crearReservaUseCase;
+        this.cancelarReservaUseCase = cancelarReservaUseCase;
     }
 
     @PostMapping
@@ -29,5 +34,11 @@ public class ReservaController {
                 request.pistaId(), request.clienteNombre(), request.inicio(), request.fin()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ReservaResponse.desde(reserva));
+    }
+
+    @PatchMapping("/{id}/cancelar")
+    public ResponseEntity<ReservaResponse> cancelar(@PathVariable Long id) {
+        Reserva reserva = cancelarReservaUseCase.cancelar(id);
+        return ResponseEntity.ok(ReservaResponse.desde(reserva));
     }
 }

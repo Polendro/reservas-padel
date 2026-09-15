@@ -1,7 +1,10 @@
 package com.pgolmeda.padelbooking.infrastructure.adapter.in.web;
 
+import com.pgolmeda.padelbooking.domain.exception.CancelacionFueraDePlazoException;
 import com.pgolmeda.padelbooking.domain.exception.PistaNoEncontradaException;
+import com.pgolmeda.padelbooking.domain.exception.ReservaNoEncontradaException;
 import com.pgolmeda.padelbooking.domain.exception.ReservaSolapadaException;
+import com.pgolmeda.padelbooking.domain.exception.ReservaYaCanceladaException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,6 +27,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ReservaSolapadaException.class)
     public ResponseEntity<Map<String, Object>> reservaSolapada(ReservaSolapadaException ex) {
+        return error(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(ReservaNoEncontradaException.class)
+    public ResponseEntity<Map<String, Object>> reservaNoEncontrada(ReservaNoEncontradaException ex) {
+        return error(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler({ReservaYaCanceladaException.class, CancelacionFueraDePlazoException.class})
+    public ResponseEntity<Map<String, Object>> cancelacionInvalida(RuntimeException ex) {
         return error(HttpStatus.CONFLICT, ex.getMessage());
     }
 

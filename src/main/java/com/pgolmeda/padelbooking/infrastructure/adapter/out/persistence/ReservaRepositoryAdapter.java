@@ -6,6 +6,7 @@ import com.pgolmeda.padelbooking.infrastructure.adapter.out.persistence.mapper.R
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 // Implementación de ReservaRepository con Spring Data + MySQL.
 @Component
@@ -26,5 +27,10 @@ public class ReservaRepositoryAdapter implements ReservaRepository {
     @Override
     public boolean existeSolapamiento(Long pistaId, LocalDateTime inicio, LocalDateTime fin) {
         return springDataReservaRepository.existeSolapamiento(pistaId, inicio, fin);
+    }
+
+    @Override
+    public Optional<Reserva> buscarPorId(Long id) {
+        return springDataReservaRepository.findById(id).map(ReservaMapper::aDominio);
     }
 }

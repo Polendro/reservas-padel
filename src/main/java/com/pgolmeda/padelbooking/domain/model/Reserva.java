@@ -1,10 +1,16 @@
 package com.pgolmeda.padelbooking.domain.model;
 
+import com.pgolmeda.padelbooking.domain.exception.CancelacionFueraDePlazoException;
+import com.pgolmeda.padelbooking.domain.exception.ReservaYaCanceladaException;
+
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 // Sin dependencias de Spring/JPA a propósito: se testea sin levantar contexto.
 public class Reserva {
+
+    private static final int HORAS_MINIMAS_DE_ANTELACION = 2;
 
     private final Long id;
     private final Long pistaId;
@@ -34,6 +40,18 @@ public class Reserva {
     // Evita que dos reservas se crucen en la misma pista.
     public boolean seSolapaCon(LocalDateTime otroInicio, LocalDateTime otroFin) {
         return inicio.isBefore(otroFin) && otroInicio.isBefore(fin);
+    }
+
+    // "ahora" entra como parámetro (en vez de usar LocalDateTime.now() aquí dentro) para que
+    // el test pueda fijar la hora y no dependa del reloj real.
+    public Reserva cancelar(LocalDateTime ahora) {
+        if (estado == EstadoReserva.CANCELADA) {
+            throw new ReservaYaCanceladaException(id);
+        }
+        if (Duration.between(ahora, inicio).toHours() < HORAS_MINIMAS_DE_ANTELACION) {
+            throw new CancelacionFueraDePlazoException(id);
+        }
+        return new Reserva(id, pistaId, clienteNombre, inicio, fin, EstadoReserva.CANCELADA);
     }
 
     public Long getId() {

@@ -1,9 +1,12 @@
 package com.pgolmeda.padelbooking.domain.model;
 
+import com.pgolmeda.padelbooking.domain.exception.CancelacionFueraDePlazoException;
+import com.pgolmeda.padelbooking.domain.exception.ReservaYaCanceladaException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,5 +35,31 @@ class ReservaTest {
         Reserva reserva = new Reserva(1L, 1L, "Pablo", inicio, inicio.plusHours(1), EstadoReserva.CONFIRMADA);
 
         assertFalse(reserva.seSolapaCon(inicio.plusHours(1), inicio.plusHours(2)));
+    }
+
+    @Test
+    void cancela_una_reserva_confirmada_con_antelacion_suficiente() {
+        LocalDateTime inicio = LocalDateTime.now().plusDays(1);
+        Reserva reserva = new Reserva(1L, 1L, "Pablo", inicio, inicio.plusHours(1), EstadoReserva.CONFIRMADA);
+
+        Reserva cancelada = reserva.cancelar(LocalDateTime.now());
+
+        assertEquals(EstadoReserva.CANCELADA, cancelada.getEstado());
+    }
+
+    @Test
+    void no_deja_cancelar_una_reserva_que_ya_estaba_cancelada() {
+        LocalDateTime inicio = LocalDateTime.now().plusDays(1);
+        Reserva reserva = new Reserva(1L, 1L, "Pablo", inicio, inicio.plusHours(1), EstadoReserva.CANCELADA);
+
+        assertThrows(ReservaYaCanceladaException.class, () -> reserva.cancelar(LocalDateTime.now()));
+    }
+
+    @Test
+    void no_deja_cancelar_con_menos_de_dos_horas_de_antelacion() {
+        LocalDateTime inicio = LocalDateTime.now().plusHours(1);
+        Reserva reserva = new Reserva(1L, 1L, "Pablo", inicio, inicio.plusHours(1), EstadoReserva.CONFIRMADA);
+
+        assertThrows(CancelacionFueraDePlazoException.class, () -> reserva.cancelar(LocalDateTime.now()));
     }
 }
