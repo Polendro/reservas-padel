@@ -2,7 +2,9 @@ package com.pgolmeda.padelbooking.application.port.out;
 
 import com.pgolmeda.padelbooking.domain.model.Reserva;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -16,4 +18,6 @@ public interface ReservaRepository {
     boolean existeSolapamiento(Long pistaId, LocalDateTime inicio, LocalDateTime fin);
 
     Optional<Reserva> buscarPorId(Long id);
+
+    List<Reserva> buscarConfirmadasPorPistaYFecha(Long pistaId, LocalDate fecha);
 }

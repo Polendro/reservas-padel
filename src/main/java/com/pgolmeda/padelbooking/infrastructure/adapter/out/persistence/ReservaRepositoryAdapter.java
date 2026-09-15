@@ -1,11 +1,14 @@
 package com.pgolmeda.padelbooking.infrastructure.adapter.out.persistence;
 
 import com.pgolmeda.padelbooking.application.port.out.ReservaRepository;
+import com.pgolmeda.padelbooking.domain.model.EstadoReserva;
 import com.pgolmeda.padelbooking.domain.model.Reserva;
 import com.pgolmeda.padelbooking.infrastructure.adapter.out.persistence.mapper.ReservaMapper;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 // Implementación de ReservaRepository con Spring Data + MySQL.
@@ -32,5 +35,17 @@ public class ReservaRepositoryAdapter implements ReservaRepository {
     @Override
     public Optional<Reserva> buscarPorId(Long id) {
         return springDataReservaRepository.findById(id).map(ReservaMapper::aDominio);
+    }
+
+    @Override
+    public List<Reserva> buscarConfirmadasPorPistaYFecha(Long pistaId, LocalDate fecha) {
+        LocalDateTime inicioDelDia = fecha.atStartOfDay();
+        LocalDateTime finDelDia = fecha.plusDays(1).atStartOfDay();
+
+        return springDataReservaRepository
+                .findByPistaIdAndEstadoAndInicioBetween(pistaId, EstadoReserva.CONFIRMADA, inicioDelDia, finDelDia)
+                .stream()
+                .map(ReservaMapper::aDominio)
+                .toList();
     }
 }
